@@ -1,0 +1,132 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f8f8;
+  color: #1a1a1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app-shell {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  text-align: center;
+  flex: 1 1 100%;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 10px 16px;
+  border: 1px solid #333;
+  background: #fff;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #f3f3f3;
+  transform: translateY(-1px);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+thead th,
+tbody td {
+  border: 1px solid #ccc;
+  padding: 10px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+thead th {
+  background: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+td.name-cell {
+  text-align: left;
+  font-weight: 600;
+  background: #fafafa;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.section-row td {
+  background: #ddd;
+  text-align: left;
+  font-weight: 700;
+  padding-left: 14px;
+}
+
+.cell-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background: #fff;
+  cursor: pointer;
+}
+
+.cell-button.present {
+  background: #4caf50;
+  color: white;
+}
+
+.cell-button.absent {
+  background: #ef5350;
+  color: white;
+}
+
+@media (max-width: 820px) {
+  thead th,
+  tbody td {
+    padding: 8px 6px;
+  }
+
+  button {
+    flex: 1 1 auto;
+  }
+}

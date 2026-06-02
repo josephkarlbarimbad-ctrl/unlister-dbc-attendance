@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlisted DBC Attendance</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <h1>UNLISTED DBC ATTENDANCE</h1>
+      <div class="controls">
+        <button id="addDateBtn">Add Date</button>
+        <button id="addNameBtn">Add Name</button>
+        <button id="removeNameBtn">Remove Name</button>
+        <button id="exportCsvBtn">Export CSV</button>
+        <button id="clearDataBtn">Reset Attendance</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="table-wrap">
+        <table id="attendanceTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <template id="sectionRowTemplate">
+    <tr class="section-row">
+      <td colspan="100%" class="section-title"></td>
+    </tr>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
