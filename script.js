@@ -44,6 +44,7 @@ const addDateBtn = document.querySelector("#addDateBtn");
 const addNameBtn = document.querySelector("#addNameBtn");
 const removeNameBtn = document.querySelector("#removeNameBtn");
 const exportCsvBtn = document.querySelector("#exportCsvBtn");
+const exportPhotoBtn = document.querySelector("#exportPhotoBtn");
 const clearDataBtn = document.querySelector("#clearDataBtn");
 
 let attendanceData = loadState();
@@ -51,7 +52,7 @@ let attendanceData = loadState();
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) {
-    return {
+    return { 
       dates: [getFormattedDate(new Date())],
       records: {},
       sections: JSON.parse(JSON.stringify(defaultSections))
@@ -203,6 +204,88 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
+function exportPhoto() {
+  const source = document.querySelector(".table-wrap");
+  const clone = source.cloneNode(true);
+
+  clone.querySelectorAll("thead th").forEach((el) => {
+    el.style.position = "static";
+  });
+  clone.querySelectorAll("td.name-cell").forEach((el) => {
+    el.style.position = "static";
+    el.style.left = "auto";
+  });
+
+  const wrapper = document.createElement("div");
+  wrapper.style.display = "inline-block";
+  wrapper.style.background = "#ffffff";
+  wrapper.style.padding = "20px";
+  wrapper.style.fontFamily = getComputedStyle(document.documentElement).fontFamily || "sans-serif";
+  wrapper.appendChild(clone);
+
+  const container = document.createElement("div");
+  container.style.position = "fixed";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.appendChild(wrapper);
+  document.body.appendChild(container);
+
+  const width = wrapper.scrollWidth;
+  const height = wrapper.scrollHeight;
+  const css = `
+    <style>
+      body { margin: 0; font-family: ${wrapper.style.fontFamily}; }
+      table { width: 100%; border-collapse: collapse; min-width: 760px; }
+      thead th, tbody td { border: 1px solid #ccc; padding: 10px 8px; text-align: center; vertical-align: middle; }
+      thead th { background: #f2f2f2; position: static; }
+      td.name-cell { text-align: left; font-weight: 600; background: #fafafa; position: static; left: auto; }
+      .section-row td { background: #ddd; text-align: left; font-weight: 700; padding-left: 14px; }
+      .cell-button { width: 30px; height: 30px; border-radius: 4px; border: 1px solid #bbb; background: #fff; }
+      .cell-button.present { background: #4caf50; color: white; }
+      .cell-button.absent { background: #ef5350; color: white; }
+    </style>
+  `;
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          ${css}
+          ${wrapper.innerHTML}
+        </div>
+      </foreignObject>
+    </svg>
+  `;
+
+  const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    const scale = window.devicePixelRatio || 1;
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
+    URL.revokeObjectURL(url);
+    document.body.removeChild(container);
+
+    const pngUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = pngUrl;
+    link.download = "unlisted_dbc_attendance.png";
+    link.click();
+  };
+  img.onerror = () => {
+    document.body.removeChild(container);
+    alert("Could not export photo. Please try in a modern browser.");
+  };
+  img.src = url;
+}
+
 function addName() {
   const sectionTitle = prompt(
     "Enter a section name (for example DRUMMER, SNARER, BASSDRUMMER):"
@@ -310,6 +393,7 @@ addDateBtn.addEventListener("click", addDate);
 addNameBtn.addEventListener("click", addName);
 removeNameBtn.addEventListener("click", removeName);
 exportCsvBtn.addEventListener("click", exportCsv);
+exportPhotoBtn.addEventListener("click", exportPhoto);
 clearDataBtn.addEventListener("click", clearAttendance);
 
 buildTable();
